@@ -1,0 +1,51 @@
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import login from '../views/login.vue'
+import Home from '../views/Home.vue'
+
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/',
+    redirect: '/login',
+    component:  () => import('../views/login.vue')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/login.vue'),
+      meta: {
+        title: '登录'
+      }
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    // component: Home
+    component: () => import('../views/Home.vue')
+  },
+  // {
+  //   path: '/about',
+  //   name: 'About',
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  // },
+]
+
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes
+})
+
+//路由导航守卫，接收一个回调函数，三个参数分表代表to:通往的页面，from:从哪个路径跳转而来，next:跳转到哪个页面
+// next(/login) 强制跳转
+router.beforeEach((to,from,next) => {
+      if(to.path === '/login') return next()
+      //获取token
+      let token = window.sessionStorage.getItem('token')
+      if(!token)
+      return next('/login') 
+      next()
+})
+
+export default router
