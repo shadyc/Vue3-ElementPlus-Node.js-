@@ -18,8 +18,17 @@ export default defineComponent({
   setup(){
       const router = useRouter();
       const setOut = function(){
-        token.clear()
-        router.push('./login')
+        let aa = [{name:2 },1,2]
+        console.log(aa)
+        let cc = aa.find(function(item: any){
+          if(item.name == 2){
+            item.name = 3
+              console.log(aa)
+          }
+        })
+
+        // token.clear()
+        // router.push('./login')
       }
     return{
        setOut
