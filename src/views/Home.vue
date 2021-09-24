@@ -50,15 +50,17 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const setOut = function () {
-      let aa = [{ name: 2 }, 1, 2];
-      console.log(aa);
-      let cc = aa.find(function (item: any) {
-        if (item.name == 2) {
-          item.name = 3;
-          console.log(aa);
-        }
-      });
-
+         let arr: Array<number> = [1,2,3,4,2,3,4,5,1]
+         let sum = arr.reduce((pre,cur,index,arr) => {
+                    if(cur in pre){
+    pre[cur]++
+  }else{
+    pre[cur] = 1 
+  }
+  return pre
+            
+         },{})
+         console.log(sum)  //10
       // token.clear()
       // router.push('./login')
     };
