@@ -1,4 +1,4 @@
-import { ElButton,ElContainer,ElHeader,ElAside,ElMain,ElMenu,ElMenuItem,ElMenuItemGroup,ElSubmenu } from 'element-plus'
+import { ElButton,ElContainer,ElHeader,ElAside,ElMain,ElMenu,ElMenuItem,ElSubmenu } from 'element-plus'
 
 export default (app) => {
   app.use(ElButton)
@@ -9,6 +9,5 @@ export default (app) => {
   app.use(ElMenu)
   app.use(ElSubmenu)
   app.use(ElMenuItem)
-  app.use(ElMenuItemGroup)
   app.use(ElSubmenu)
 }
