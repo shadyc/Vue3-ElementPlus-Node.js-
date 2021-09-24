@@ -5,13 +5,16 @@ import Home from '../views/Home.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    //重定向
     redirect: '/login',
-    component:  () => import('../views/login.vue')
+    // component:  () => import('../views/login.vue')
+    component: login//component两种写法
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/login.vue'),
+    // component: () => import('../views/login.vue'),
+    component: login,//component两种写法
       meta: {
         title: '登录'
       }
@@ -20,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/home',
     name: 'Home',
     // component: Home
-    component: () => import('../views/Home.vue')
+    component: Home
   },
   // {
   //   path: '/about',
@@ -39,13 +42,13 @@ const router = createRouter({
 
 //路由导航守卫，接收一个回调函数，三个参数分表代表to:通往的页面，from:从哪个路径跳转而来，next:跳转到哪个页面
 // next(/login) 强制跳转
-router.beforeEach((to,from,next) => {
-      if(to.path === '/login') return next()
-      //获取token
-      let token = window.sessionStorage.getItem('token')
-      if(!token)
-      return next('/login') 
-      next()
-})
+// router.beforeEach((to,from,next) => {
+//       if(to.path === '/login') return next()
+//       //获取token
+//       let token = window.sessionStorage.getItem('token')
+//       if(!token)
+//       return next('/login') 
+//       next()
+// })
 
 export default router
