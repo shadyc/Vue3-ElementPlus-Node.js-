@@ -95,6 +95,10 @@ export default defineComponent({
   }
 }
 
+.el-submenu{
+  width: 200px;
+}
+
 .el-aside {
   background-color: #333744;
 }
