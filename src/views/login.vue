@@ -32,7 +32,7 @@ import { ElButton, ElInput, ElForm, ElFormItem, ElMessage  } from "element-plus"
 import { reactive, ref, unref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
-const sessionStorage = window.sessionStorage
+const localStorage = window.localStorage
 
 interface loginUser{
      name: string,
@@ -78,16 +78,17 @@ export default defineComponent({
             message: '登录成功',
             type: 'success',
           })
+           //将登录成功之后的token,保存到客户端的localStorage中
+           //  项目中除了登录之外的其他API接口，必须在登录之后才能访问
+           //  token只应在当前打开网页期间生效，所以用localStorage
+          localStorage.setItem('token',res.data.token)
+          router.push('/home')
            }
            else{
              ElMessage.error('用户名或密码错误')
            }
            console.log(res)
-           //将登录成功之后的token,保存到客户端的sessionStorage中
-           //  项目中除了登录之外的其他API接口，必须在登录之后才能访问
-           //  token只应在当前打开网页期间生效，所以用sessionStorage
-          sessionStorage.setItem('token',res.data.token)
-          router.push('/home')
+          
           })
     }
     const reset = () => {

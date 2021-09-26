@@ -20,17 +20,19 @@
           active-text-color="#ffd04b"
         >
         <!-- 一级菜单 -->
-          <el-submenu index="1">
-            <template #title><i class="el-icon-message"></i>一</template>
+          <el-submenu index="1" v-for="item in state.menuList" :key="item.id">
+            <template #title><i class="el-icon-message"></i>
+             <span>{{item.authName}}</span>
+            </template>
 
             <!-- 二级菜单 -->
               <el-menu-item index="1-1">
                  <template #title><i class="el-icon-message"></i>Option 1</template>
                  </el-menu-item>
           </el-submenu>
-          <el-submenu index="2">
+          <!-- <el-submenu index="2">
             <template #title><i class="el-icon-menu"></i>二</template>
-          </el-submenu>
+          </el-submenu> -->
         </el-menu>
       </el-aside>
       <!-- 主内容 -->
@@ -40,6 +42,8 @@
 </template>
 
 <script lang="ts">
+import { reactive, ref, unref } from "vue";
+import axios from "axios";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 const token = window.sessionStorage;
@@ -49,23 +53,23 @@ export default defineComponent({
   components: {},
   setup() {
     const router = useRouter();
+    let state: any = reactive({
+        menuList : []
+    });
+    //获取所有菜单
+     (async () =>{
+      console.log("123")
+      let res = await axios.get('/menus')
+      state.menuList = res.data
+      console.log(state.menuList)
+    })()
     const setOut = function () {
-         let arr: Array<number> = [1,2,3,4,2,3,4,5,1]
-         let sum = arr.reduce((pre,cur,index,arr) => {
-                    if(cur in pre){
-    pre[cur]++
-  }else{
-    pre[cur] = 1 
-  }
-  return pre
-            
-         },{})
-         console.log(sum)  //10
-      // token.clear()
-      // router.push('./login')
+      token.clear()
+      router.push('./login')
     };
     return {
       setOut,
+      state
     };
   },
 });

@@ -45,7 +45,7 @@ const router = createRouter({
 // router.beforeEach((to,from,next) => {
 //       if(to.path === '/login') return next()
 //       //获取token
-//       let token = window.sessionStorage.getItem('token')
+//       let token = window.localStorage.getItem('token')
 //       if(!token)
 //       return next('/login') 
 //       next()

@@ -17,7 +17,7 @@ axios.defaults.timeout = 10000;
 axios.interceptors.request.use(
   //config中有一个header参数，是前端向后端发请求时携带的
   config => {
-    config.headers.Authorization = window.sessionStorage.getItem('token')
+    config.headers.Authorization = window.localStorage.getItem('token')
     Toast.loading({
       duration: 0,
       message: '加载中...',
