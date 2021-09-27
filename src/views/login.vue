@@ -80,7 +80,7 @@ export default defineComponent({
           })
            //将登录成功之后的token,保存到客户端的localStorage中
            //  项目中除了登录之外的其他API接口，必须在登录之后才能访问
-           //  token只应在当前打开网页期间生效，所以用localStorage
+           //  使用localStorage长期存储token,实现免验证登录
           localStorage.setItem('token',res.data.token)
           router.push('/home')
            }
