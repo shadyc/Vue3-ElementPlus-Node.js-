@@ -14,20 +14,21 @@
       <el-aside width="200px">
         <!-- default-openeds: 默认打开 -->
         <el-menu
-          :default-openeds="['1']"
+          :default-openeds="['101']"
           background-color="#333744"
           text-color="#fff"
-          active-text-color="#ffd04b"
+          active-text-color="#409EFF"
         >
         <!-- 一级菜单 -->
-          <el-submenu index="1" v-for="item in state.menuList" :key="item.id">
+             <!-- + '' 可以把数值为number的index转化为字符串 -->
+          <el-submenu :index="item.id + ''" v-for="item in state.menuList" :key="item.id">
             <template #title><i class="el-icon-message"></i>
              <span>{{item.authName}}</span>
             </template>
 
             <!-- 二级菜单 -->
-              <el-menu-item index="1-1">
-                 <template #title><i class="el-icon-message"></i>Option 1</template>
+              <el-menu-item :index="child.id + ''" v-for="child in item.children" :key="child.id">
+                 <template #title><i class="el-icon-menu"></i>{{child.authName}}</template>
                  </el-menu-item>
           </el-submenu>
           <!-- <el-submenu index="2">
@@ -58,9 +59,8 @@ export default defineComponent({
     });
     //获取所有菜单
      (async () =>{
-      console.log("123")
       let res = await axios.get('/menus')
-      state.menuList = res.data
+      state.menuList = res.data.data
       console.log(state.menuList)
     })()
     const setOut = function () {
