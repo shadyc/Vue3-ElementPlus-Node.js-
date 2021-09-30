@@ -9,12 +9,15 @@
     </div> -->
   <div class="allPage">
     <div class="info">
+      <div class="login">
+        <span>登录</span>
+      </div>
       <el-form :model="loginForm" :rules="rules" ref="loginFormRef">
-        <el-form-item label="用户名:" label-width="150px" prop="name">
-          <el-input placeholder="请输入用户名" v-model="loginForm.name"></el-input>
+        <el-form-item label-width="150px" prop="name">
+          <el-input prefix-icon="el-icon-user-solid" placeholder="请输入用户名" v-model="loginForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="密码:" label-width="150px" prop="pwd">
-          <el-input placeholder="请输入密码" v-model="loginForm.pwd"></el-input>
+        <el-form-item  label-width="150px" prop="pwd">
+          <el-input prefix-icon="el-icon-s-opportunity" placeholder="请输入密码" v-model="loginForm.pwd"></el-input>
         </el-form-item>
       </el-form>
       <div class="btnGroup">
@@ -135,6 +138,8 @@ export default defineComponent({
   width: 100%;
   height: 90%;
   padding-top: 200px;
+  background-image: url('../assets/loginBack.jpg');
+  background-size: cover;
   .info {
     width: 500px;
     height: 100px;
@@ -142,9 +147,34 @@ export default defineComponent({
     justify-content: center;
   }
 }
+
+.login{
+  width: 600px;
+  height: 50px;
+  text-align: center;
+  span{
+    color: #FFFFFF;
+    font-size: 26px;
+  }
+}
+
 .btnGroup{
   position: absolute;
-  left: 55%;
-  margin-top: 30px;
+  left: 52.5%;
+  margin-top: 20px;
 }
+ .el-input {
+    display: inline-block;
+    height: 37px;
+    width: 85%;
+     background-color: rgb(89, 107, 143);
+     border-radius: 5px;
+     opacity: 0.7;
+  }
+
+  /deep/.el-input--prefix .el-input__inner{
+    background-color: rgb(89, 107, 143);
+    border: none;
+    color: #FFFFFF;
+  }
 </style>
