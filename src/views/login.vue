@@ -136,7 +136,7 @@ export default defineComponent({
 <style scoped lang="less">
 .allPage {
   width: 100%;
-  height: 90%;
+  height: 78.7%;
   padding-top: 200px;
   background-image: url('../assets/loginBack.jpg');
   background-size: cover;

@@ -11,25 +11,40 @@
     <!-- 页面主体 -->
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside width="200px">
+      <el-aside :width="state.iscollapse ? '64px' : '200px'">
+        <div class="toggle-button" @click="toggleCollapse">|||</div>
         <!-- default-openeds: 默认打开 -->
         <el-menu
           :default-openeds="['101']"
           background-color="#333744"
           text-color="#fff"
           active-text-color="#409EFF"
+          :unique-opened="true"
+          :collapse="state.iscollapse"
+          :collapse-transition="false"
         >
-        <!-- 一级菜单 -->
-             <!-- + '' 可以把数值为number的index转化为字符串 -->
-          <el-submenu :index="item.id + ''" v-for="item in state.menuList" :key="item.id">
-            <template #title><i class="el-icon-message"></i>
-             <span>{{item.authName}}</span>
+          <!-- 一级菜单 -->
+          <!-- + '' 可以把数值为number的index转化为字符串 -->
+          <el-submenu
+            :index="item.id + ''"
+            v-for="item in state.menuList"
+            :key="item.id"
+          >
+            <template #title
+              ><i :class="state.iconsObj[item.id]"></i>
+              <span>{{ item.authName }}</span>
             </template>
 
             <!-- 二级菜单 -->
-              <el-menu-item :index="child.id + ''" v-for="child in item.children" :key="child.id">
-                 <template #title><i class="el-icon-menu"></i>{{child.authName}}</template>
-                 </el-menu-item>
+            <el-menu-item
+              :index="child.id + ''"
+              v-for="child in item.children"
+              :key="child.id"
+            >
+              <template #title
+                ><i class="el-icon-menu"></i>{{ child.authName }}</template
+              >
+            </el-menu-item>
           </el-submenu>
           <!-- <el-submenu index="2">
             <template #title><i class="el-icon-menu"></i>二</template>
@@ -37,7 +52,10 @@
         </el-menu>
       </el-aside>
       <!-- 主内容 -->
-      <el-main></el-main>
+      <el-main>
+        <!-- 路由占位符 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -55,21 +73,34 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     let state: any = reactive({
-        menuList : []
+      menuList: [],
+      iconsObj: {
+        "125": "iconfont icon-user",
+        "103": "iconfont icon-tijikongjian",
+        "101": "iconfont icon-shangpin",
+        "102": "iconfont icon-danju",
+        "145": "iconfont icon-baobiao",
+      },
+      iscollapse: false,
     });
     //获取所有菜单
-     (async () =>{
-      let res = await axios.get('/menus')
-      state.menuList = res.data.data
-      console.log(state.menuList)
-    })()
+    (async () => {
+      let res = await axios.get("/menus");
+      state.menuList = res.data.data;
+      console.log(state.menuList);
+    })();
     const setOut = function () {
-      token.clear()
-      router.push('./login')
+      token.clear();
+      router.push("./login");
+    };
+    //点击按钮，折叠左侧菜单
+    const toggleCollapse = () => {
+      state.iscollapse = !state.iscollapse;
     };
     return {
       setOut,
-      state
+      state,
+      toggleCollapse,
     };
   },
 });
@@ -99,15 +130,28 @@ export default defineComponent({
   }
 }
 
-.el-submenu{
-  width: 200px;
+.toggle-button {
+  background-color: #4a5064;
+  font-size: 10px;
+  line-height: 24px;
+  color: #ffffff;
+  text-align: center;
+  letter-spacing: 0.2em;
+  cursor: pointer;
 }
 
 .el-aside {
   background-color: #333744;
+  .el-menu {
+    border-right: none;
+  }
 }
 
 .el-main {
   background-color: #eaedf1;
+}
+
+.iconfont {
+  margin-right: 10px;
 }
 </style>

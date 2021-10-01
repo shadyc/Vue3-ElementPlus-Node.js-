@@ -6,6 +6,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import installElementPlus from './plugins/element'
+import './assets/fonts/iconfont.css'
 
 //创建app应用返回对应的实例对象，调用mount方法进行挂载到id为app的div上去(public下的index.html中)
 const app = createApp(App)
