@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import func from 'vue-editor-bridge'
 export default {
     name: 'promiseWrite',
     setup(){
@@ -26,7 +27,19 @@ export default {
                        }
                   }
 
-
+                  let reject = (reson) => {
+                       if(this.status === 'pending'){
+                           setTimeout(() => {
+                                  this.status = 'rejected'
+                                  this.value = reson
+                                  
+                           }, 1000);
+                       }
+                  }
+            executor(resolve,reject)
+          }
+          promise.prototype.then = function(){
+              
           }
         return{
             promise
