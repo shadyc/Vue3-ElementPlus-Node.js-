@@ -41,6 +41,21 @@ export default {
           promise.prototype.then = function(){
               
           }
+          
+          //简单实现深拷贝
+          function deepCopy(obj){
+              if(obj === null || typeof obj !== 'object'){
+                  return obj
+              }
+
+              let copy = obj instanceof Array? [] : {}
+              Object.keys(obj).forEach( key => {
+                copy[key] = deepCopy(obj[key])
+              })
+                  return copy
+          }
+
+          deepCopy({a: 123, b: 234})
         return{
             promise
         }
