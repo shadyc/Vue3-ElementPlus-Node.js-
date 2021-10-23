@@ -2,6 +2,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import login from '../views/login.vue'
 import Home from '../views/Home.vue'
 import welcome from '../components/welcome.vue'
+import Users from '../components/user/Users.vue'
+import DataModidy from '../components/dataStatistics/dataModify.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,7 +27,10 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: Home,
     redirect: '/welcome', 
-    children: [{path: '/welcome', component: welcome}]
+    children: [{path: '/welcome', component: welcome},
+               {path: '/users', component: Users},
+               {path: '/dataModidy', component: DataModidy},
+  ]
   },
   // {
   //   path: '/about',

@@ -14,6 +14,7 @@
       <el-aside :width="state.iscollapse ? '64px' : '200px'">
         <div class="toggle-button" @click="toggleCollapse">|||</div>
         <!-- default-openeds: 默认打开 -->
+        <!-- default-active :选中菜单设置高亮，变量设置为当前路径地址 -->
         <el-menu
           :default-openeds="['101']"
           background-color="#333744"
@@ -22,6 +23,8 @@
           :unique-opened="true"
           :collapse="state.iscollapse"
           :collapse-transition="false"
+          router
+          :default-active="$route.path"
         >
           <!-- 一级菜单 -->
           <!-- + '' 可以把数值为number的index转化为字符串 -->
@@ -37,7 +40,7 @@
 
             <!-- 二级菜单 -->
             <el-menu-item
-              :index="child.id + ''"
+              :index="'/' + child.path"
               v-for="child in item.children"
               :key="child.id"
             >

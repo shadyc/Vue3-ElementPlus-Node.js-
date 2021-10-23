@@ -1,4 +1,4 @@
-import { ElButton,ElContainer,ElHeader,ElAside,ElMain,ElMenu,ElMenuItem,ElSubmenu } from 'element-plus'
+import { ElButton, ElContainer, ElHeader, ElAside, ElMain, ElMenu, ElMenuItem, ElSubmenu, ElBreadcrumb, ElBreadcrumbItem } from 'element-plus'
 
 export default (app) => {
   app.use(ElButton)
@@ -10,4 +10,6 @@ export default (app) => {
   app.use(ElSubmenu)
   app.use(ElMenuItem)
   app.use(ElSubmenu)
+  app.use(ElBreadcrumb)
+  app.use(ElBreadcrumbItem)
 }
