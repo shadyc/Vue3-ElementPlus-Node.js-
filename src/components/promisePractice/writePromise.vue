@@ -1,6 +1,7 @@
 <template>aaaaa1212</template>
 
 <script>
+// import func from 'vue-editor-bridge';
 export default {
   name: "promiseWrite",
   setup() {
@@ -75,7 +76,46 @@ export default {
     const create = function(){
         let cre1 = this.myCall.args
     }
- 
+
+    //手撕new
+    function createNew(fn,...args){
+         let obj = {}
+         fn.t = this
+         obj = fn.t(...args)
+         delete fn.t
+         fn.prototype = obj._proto_
+         return obj
+    }
+    createNew(obj,1,2)
+
+    //创建一个类,原始方法
+    function shady(job,habbit){
+            this.job = job
+            this.habbit = habbit
+            shady.prototype.idol = function(){
+              console.log('marshall')
+            }
+    }
+    //创建一个类,class方法
+    class shady1{
+         constructor(job,habbit){
+             this.job = job
+             this.habbit = habbit
+         }
+         idol(){
+           console.log('marshall')
+         }
+    }
+    //创建实例
+    const lc = new shady()
+
+    //setTimeout实现setInterval
+    function myTimeout(fn,time){
+          let timer = null
+          setTimeout(() => {
+                fn           
+          }, time);
+    }
 
 
     return {
