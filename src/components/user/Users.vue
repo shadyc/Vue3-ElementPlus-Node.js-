@@ -33,13 +33,35 @@
         <template #default="scope">
           <!-- scope.row属性可以查看整个表格信息 -->
           <el-switch
-            v-model="scope.row.mg_state"
+            v-model="scope.row.mg_state" @change="userStateChange(scope.row)"
           >
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="操作"></el-table-column>
+      <el-table-column label="操作" width="180px">
+        <template #default="scope">
+          <!-- 修改按钮 -->
+          <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+          <!-- 删除按钮 -->
+          <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+          <!-- 分配角色按钮 -->
+          <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
+          <el-button  type="warning" icon="el-icon-setting" size="mini"></el-button>
+          </el-tooltip>
+        </template>
+      </el-table-column>
     </el-table>
+
+    <!-- 分页区域 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="queryInfo.pagenum"
+      :page-sizes="[1, 2, 5, 10]"
+      :page-size="queryInfo.pagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="state.total">
+    </el-pagination>
   </el-card>
 </template>
 
@@ -55,10 +77,13 @@ export default defineComponent({
   name: "Users",
   components: {},
   setup() {
+    // 获取用户列表的参数对象
     const queryInfo: usrrInfo = reactive({
       query: "",
+      // 当前的页数
       pagenum: 1,
-      pagesize: 2,
+      // 当前每页显示多少条数据
+      pagesize: 1,
     });
     const state = reactive({
       userList: [
@@ -88,10 +113,28 @@ export default defineComponent({
     let getUserList = async function () {
       const { data: res } = await axios.get("/user", { params: queryInfo });
     };
+    // 监听 pagesize 改变的事件
+    let handleSizeChange = newSize => {
+           console.log(newSize)
+           queryInfo.pagesize = newSize
+           getUserList()
+    }
+    // 监听 页码值 改变的事件
+    let handleCurrentChange = newPage => {
+            console.log(newPage)
+            queryInfo.pagenum = newPage
+    }
+    // 监听 switch 开关状态改变
+    let userStateChange = userInfo => {
+           console.log(userInfo)
+    }
     return {
       queryInfo,
       getUserList,
       state,
+      handleSizeChange,
+      handleCurrentChange,
+      userStateChange
     };
   },
 });
