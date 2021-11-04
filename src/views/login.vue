@@ -31,10 +31,10 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
-import { ElButton, ElInput, ElForm, ElFormItem, ElMessage  } from "element-plus";
 import { reactive, ref, unref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import { ElMessage } from "element-plus";
 const localStorage = window.localStorage
 
 interface loginUser{
@@ -45,11 +45,7 @@ interface loginUser{
 export default defineComponent({
   name: "login",
   components: {
-    ElButton,
-    ElForm,
-    ElInput,
-    ElFormItem,
-    ElMessage 
+  
   },
   setup() {
      const state:any = reactive({
