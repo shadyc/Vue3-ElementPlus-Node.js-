@@ -47,7 +47,7 @@
       <el-table-column label="操作" width="180px">
         <template #default="scope">
           <!-- 修改按钮 -->
-          <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
           <!-- 删除按钮 -->
           <el-button
             type="danger"
@@ -112,6 +112,20 @@
     </span>
     </template>
   </el-dialog>
+  
+  <!-- 修改用户的对话框 -->
+    <el-dialog
+    title="修改用户"
+    v-model="state.editDialogVisible"
+    width="50%"
+  >
+    <template #footer>
+    <span class="dialog-footer">
+      <el-button @click="state.editDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="state.editDialogVisible = false">确 定</el-button>
+    </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts">
@@ -160,6 +174,7 @@ export default defineComponent({
       total: 0,
       // 控制添加用户对话框的显隐
       addDialogVisible: false,
+      editDialogVisible: false,
     });
       const addFormRef:any = ref(null)
       // 添加用户的表单数据
@@ -191,9 +206,10 @@ export default defineComponent({
       queryInfo.pagenum = newPage;
     };
     // 监听 switch 开关状态改变
-    let userStateChange = (userInfo) => {
+    let userStateChange =async (userInfo) => {
       console.log(userInfo);
-      axios.put("");
+      let {data: res} = await axios.put("");
+      console.log()
     };
     // 添加用户按钮
     let addUser = () => {
@@ -213,6 +229,11 @@ export default defineComponent({
            
         })
     }
+    // 展示编辑用户的对话框
+    let showEditDialog = (id) => {
+          state.editDialogVisible = true
+          console.log(id)
+    }
     return {
       queryInfo,
       getUserList,
@@ -225,7 +246,8 @@ export default defineComponent({
       addFormRules,
       addUserOk,
       addDialogClosed,
-      addFormRef
+      addFormRef,
+      showEditDialog
     };
   },
 });
