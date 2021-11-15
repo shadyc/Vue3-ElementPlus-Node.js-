@@ -30,11 +30,11 @@
     <!-- 用户列表区域 -->
     <el-table :data="state.userList" border stripe>
       <el-table-column type="index"></el-table-column>
-      <el-table-column label="姓名" prop="username"></el-table-column>
+      <el-table-column label="姓名" prop="name"></el-table-column>
       <el-table-column label="邮箱" prop="email"></el-table-column>
-      <el-table-column label="电话" prop="mobile"></el-table-column>
-      <el-table-column label="角色" prop="role_name"></el-table-column>
-      <el-table-column label="状态" prop="mg_state">
+      <el-table-column label="电话" prop="tel"></el-table-column>
+      <el-table-column label="角色" prop="role"></el-table-column>
+      <el-table-column label="状态">
         <template #default="scope">
           <!-- scope.row属性可以查看整个表格信息 -->
           <el-switch
@@ -131,6 +131,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
 import axios from "axios";
+import { ElMessage } from "element-plus";
 interface usrrInfo {
   query: string;
   pagenum: Number;
@@ -144,33 +145,12 @@ export default defineComponent({
     const queryInfo: usrrInfo = reactive({
       query: "",
       // 当前的页数
-      pagenum: 1,
+      pagenum: 2,
       // 当前每页显示多少条数据
-      pagesize: 1,
+      pagesize: 2,
     });
     const state = reactive({
-      userList: [
-        {
-          id: 25,
-          username: "admin",
-          mobile: 17866619910,
-          type: 1,
-          email: "1159361483@qq.com",
-          create_time: "2021-11-02",
-          mg_state: true, //当前用户状态
-          role_name: "超级管理员",
-        },
-        {
-          id: 26,
-          username: "shady",
-          mobile: 1823821392,
-          type: 1,
-          email: "marshall@qq.com",
-          create_time: "2021-11-02",
-          mg_state: false,
-          role_name: "vip用户",
-        },
-      ],
+      userList: [],
       total: 0,
       // 控制添加用户对话框的显隐
       addDialogVisible: false,
@@ -192,8 +172,19 @@ export default defineComponent({
         mobile: [{ required: true,message: '请输入手机', trigger: 'blur' }, {min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur'}],
       }
     let getUserList = async function () {
-      const { data: res } = await axios.get("/user", { params: queryInfo });
+      const { data: res } = await axios.post("/usersList", { params: queryInfo });
+      console.log(res)
+      console.log(res.data)
+      if(res.meta.status != 200){
+        return ElMessage.error('获取用户列表失败！')
+      }
+      res.data.map(item => {
+           item.mg_state = Boolean(item.mg_state)
+      });
+      state.userList = res.data
+      state.total = res.total.total
     };
+    getUserList()
     // 监听 pagesize 改变的事件
     let handleSizeChange = (newSize) => {
       console.log(newSize);

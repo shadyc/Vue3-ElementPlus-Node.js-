@@ -1,9 +1,11 @@
-<template>aaaaa1212</template>
+<template>
+<div>123</div>
+</template>
 
 <script>
 // import func from 'vue-editor-bridge';
 export default {
-  name: "promiseWrite",
+  name: "writePromise",
   setup() {
     let promise = function (executor) {
       this.status = "pending";
@@ -119,7 +121,6 @@ export default {
 
 
     return {
-      promise,
     };
   },
 };
