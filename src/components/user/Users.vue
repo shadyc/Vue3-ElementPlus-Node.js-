@@ -53,6 +53,7 @@
             type="danger"
             icon="el-icon-delete"
             size="mini"
+            @click="deleteUser(scope.row)"
           ></el-button>
           <!-- 分配角色按钮 -->
           <el-tooltip
@@ -95,14 +96,14 @@
     <el-form-item label="用户名" prop="username">
       <el-input v-model="addForm.username"></el-input>
     </el-form-item>
-    <el-form-item label="密码" prop="password">
-      <el-input v-model="addForm.password"></el-input>
+    <el-form-item label="密码" prop="pwd">
+      <el-input v-model="addForm.pwd"></el-input>
     </el-form-item>
     <el-form-item label="邮箱" prop="email">
       <el-input v-model="addForm.email"></el-input>
     </el-form-item>
-    <el-form-item label="手机" prop="mobile">
-      <el-input v-model="addForm.mobile"></el-input>
+    <el-form-item label="手机" prop="tel">
+      <el-input v-model="addForm.tel"></el-input>
     </el-form-item>
     </el-form>
     <template #footer>
@@ -145,7 +146,7 @@ export default defineComponent({
     const queryInfo: usrrInfo = reactive({
       query: "",
       // 当前的页数
-      pagenum: 2,
+      pagenum: 1,
       // 当前每页显示多少条数据
       pagesize: 2,
     });
@@ -160,16 +161,19 @@ export default defineComponent({
       // 添加用户的表单数据
       const addForm = reactive({
         username: '',
-        ElMessage: '',
+        pwd: '',
         email: '',
-        mobile: '',
+        tel: '',
+        //id为主键，此时选择随机生成一个1-100之间整数作为id
+        id: Math.floor(Math.random()*100),
+        role: '普通用户'
       })
       // 添加表单的验证规则对象
       const addFormRules = {
         username: [{ required: true,message: '请输入用户名', trigger: 'blur' }, {min: 3, max: 10, message: '用户名的长度在3~10个字符之间', trigger: 'blur'}],
-        password: [{ required: true,message: '请输入密码', trigger: 'blur' }, {min: 6, max: 15, message: '密码的长度在6~15个字符之间', trigger: 'blur'}],
+        pwd: [{ required: true,message: '请输入密码', trigger: 'blur' }, {min: 6, max: 15, message: '密码的长度在6~15个字符之间', trigger: 'blur'}],
         email: [{ required: true,message: '请输入邮箱', trigger: 'blur' }, {min: 6, max: 15, message: '请输入正确的邮箱号', trigger: 'blur'}],
-        mobile: [{ required: true,message: '请输入手机', trigger: 'blur' }, {min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur'}],
+        tel: [{ required: true,message: '请输入手机', trigger: 'blur' }, {min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur'}],
       }
     let getUserList = async function () {
       const { data: res } = await axios.post("/usersList", { params: queryInfo });
@@ -195,22 +199,29 @@ export default defineComponent({
     let handleCurrentChange = (newPage) => {
       console.log(newPage);
       queryInfo.pagenum = newPage;
+      getUserList();
     };
     // 监听 switch 开关状态改变
     let userStateChange =async (userInfo) => {
       console.log(userInfo);
       let {data: res} = await axios.put("");
-      console.log()
     };
     // 添加用户按钮
     let addUser = () => {
       state.addDialogVisible = true
-      console.log("hahah")
     }
     // 确认添加用户按钮
-    let addUserOk = () => {
+    let addUserOk = async () => {
       addFormRef.value.validate()
-      
+       let {data: res} = await axios.post("/addUser", {params: addForm})
+       console.log(addForm)
+       console.log(res)
+       if(res.meta.status != 200){
+         return ElMessage.error('添加用户失败！')
+       }
+         state.addDialogVisible = false
+         getUserList();
+         return ElMessage.success('添加用户成功！')
     }
     // 监听添加用户对话框的关闭事件
     let addDialogClosed = () => {
@@ -225,6 +236,15 @@ export default defineComponent({
           state.editDialogVisible = true
           console.log(id)
     }
+    //删除用户按钮
+    let deleteUser = async info => {
+       let {data: res} = await axios.post("/deleteUser", info)
+        if(res.meta.status != 200){
+         return ElMessage.error('删除用户失败！')
+       }
+        getUserList();
+       return ElMessage.success('删除用户成功！')
+    }
     return {
       queryInfo,
       getUserList,
@@ -238,7 +258,8 @@ export default defineComponent({
       addUserOk,
       addDialogClosed,
       addFormRef,
-      showEditDialog
+      showEditDialog,
+      deleteUser
     };
   },
 });

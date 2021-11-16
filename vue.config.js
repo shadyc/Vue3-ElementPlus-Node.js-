@@ -11,11 +11,23 @@ module.exports = {
                 //     '/user': '/',                    //路径转发代理 /user 的意思就是 用/user 代替http:localhost：8080
                 // }
             },
+            // 左侧菜单接口
             '/menus': {         
                 target: 'http://127.0.0.1:3000', 
                 changeOrigin: true,              
             },
+            //获取用户列表接口
             '/usersList': {         
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,              
+            },
+            //添加用户接口
+            '/addUser': {         
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,              
+            },
+            //删除用户接口
+            '/deleteUser': {         
                 target: 'http://127.0.0.1:3000', 
                 changeOrigin: true,              
             },
