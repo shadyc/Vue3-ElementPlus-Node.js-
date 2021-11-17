@@ -47,7 +47,12 @@
       <el-table-column label="操作" width="180px">
         <template #default="scope">
           <!-- 修改按钮 -->
-          <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            size="mini"
+            @click="showEditDialog(scope.row)"
+          ></el-button>
           <!-- 删除按钮 -->
           <el-button
             type="danger"
@@ -92,39 +97,61 @@
     width="50%"
     @close="addDialogClosed"
   >
-    <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="70px">
-    <el-form-item label="用户名" prop="username">
-      <el-input v-model="addForm.username"></el-input>
-    </el-form-item>
-    <el-form-item label="密码" prop="pwd">
-      <el-input v-model="addForm.pwd"></el-input>
-    </el-form-item>
-    <el-form-item label="邮箱" prop="email">
-      <el-input v-model="addForm.email"></el-input>
-    </el-form-item>
-    <el-form-item label="手机" prop="tel">
-      <el-input v-model="addForm.tel"></el-input>
-    </el-form-item>
+    <el-form
+      ref="addFormRef"
+      :model="addForm"
+      :rules="addFormRules"
+      label-width="70px"
+    >
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="addForm.username"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="pwd">
+        <el-input v-model="addForm.pwd"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="addForm.email"></el-input>
+      </el-form-item>
+      <el-form-item label="手机" prop="tel">
+        <el-input v-model="addForm.tel"></el-input>
+      </el-form-item>
     </el-form>
     <template #footer>
-    <span class="dialog-footer">
-      <el-button @click="state.addDialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="addUserOk">确 定</el-button>
-    </span>
+      <span class="dialog-footer">
+        <el-button @click="state.addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addUserOk">确 定</el-button>
+      </span>
     </template>
   </el-dialog>
-  
+
   <!-- 修改用户的对话框 -->
-    <el-dialog
+  <el-dialog
     title="修改用户"
     v-model="state.editDialogVisible"
     width="50%"
+    @close="updateDialogClosed"
   >
+    <el-form
+      ref="updateFormRef"
+      :model="updateForm"
+      :rules="updateFormRules"
+      label-width="70px"
+    >
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="updateForm.username" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="updateForm.email"></el-input>
+      </el-form-item>
+      <el-form-item label="手机号" prop="tel">
+        <el-input v-model="updateForm.tel"></el-input>
+      </el-form-item>
+    </el-form>
     <template #footer>
-    <span class="dialog-footer">
-      <el-button @click="state.editDialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="state.editDialogVisible = false">确 定</el-button>
-    </span>
+      <span class="dialog-footer">
+        <el-button @click="state.editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateUser">确 定</el-button>
+      </span>
     </template>
   </el-dialog>
 </template>
@@ -132,7 +159,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
 import axios from "axios";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 interface usrrInfo {
   query: string;
   pagenum: Number;
@@ -148,7 +175,7 @@ export default defineComponent({
       // 当前的页数
       pagenum: 1,
       // 当前每页显示多少条数据
-      pagesize: 2,
+      pagesize: 5,
     });
     const state = reactive({
       userList: [],
@@ -157,94 +184,161 @@ export default defineComponent({
       addDialogVisible: false,
       editDialogVisible: false,
     });
-      const addFormRef:any = ref(null)
-      // 添加用户的表单数据
-      const addForm = reactive({
-        username: '',
-        pwd: '',
-        email: '',
-        tel: '',
-        //id为主键，此时选择随机生成一个1-100之间整数作为id
-        id: Math.floor(Math.random()*100),
-        role: '普通用户'
-      })
-      // 添加表单的验证规则对象
-      const addFormRules = {
-        username: [{ required: true,message: '请输入用户名', trigger: 'blur' }, {min: 3, max: 10, message: '用户名的长度在3~10个字符之间', trigger: 'blur'}],
-        pwd: [{ required: true,message: '请输入密码', trigger: 'blur' }, {min: 6, max: 15, message: '密码的长度在6~15个字符之间', trigger: 'blur'}],
-        email: [{ required: true,message: '请输入邮箱', trigger: 'blur' }, {min: 6, max: 15, message: '请输入正确的邮箱号', trigger: 'blur'}],
-        tel: [{ required: true,message: '请输入手机', trigger: 'blur' }, {min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur'}],
-      }
-    let getUserList = async function () {
-      const { data: res } = await axios.post("/usersList", { params: queryInfo });
-      console.log(res)
-      console.log(res.data)
-      if(res.meta.status != 200){
-        return ElMessage.error('获取用户列表失败！')
-      }
-      res.data.map(item => {
-           item.mg_state = Boolean(item.mg_state)
-      });
-      state.userList = res.data
-      state.total = res.total.total
+    const addFormRef: any = ref(null);
+    // 添加用户的表单数据
+    const addForm = reactive({
+      username: "",
+      pwd: "",
+      email: "",
+      tel: "",
+      //id为主键，此时选择随机生成一个1-100之间整数作为id
+      id: Math.floor(Math.random() * 100),
+      role: "普通用户",
+    });
+    // 添加表单的验证规则对象
+    const addFormRules = {
+      username: [
+        { required: true, message: "请输入用户名", trigger: "blur" },
+        {
+          min: 3,
+          max: 10,
+          message: "用户名的长度在3~10个字符之间",
+          trigger: "blur",
+        },
+      ],
+      pwd: [
+        { required: true, message: "请输入密码", trigger: "blur" },
+        {
+          min: 6,
+          max: 15,
+          message: "密码的长度在6~15个字符之间",
+          trigger: "blur",
+        },
+      ],
+      email: [
+        { required: true, message: "请输入邮箱", trigger: "blur" },
+        { min: 6, max: 15, message: "请输入正确的邮箱号", trigger: "blur" },
+      ],
+      tel: [
+        { required: true, message: "请输入手机", trigger: "blur" },
+        { min: 11, max: 11, message: "请输入正确的手机号", trigger: "blur" },
+      ],
     };
-    getUserList()
+    const updateFormRef: any = ref(null);
+    //添加查询用户信息的表单数据
+    const updateForm = reactive({
+      username: "",
+      email: "",
+      tel: "",
+    });
+    const updateFormRules = {
+      email: [
+        { required: true, message: "请输入邮箱", trigger: "blur" },
+        { min: 6, max: 20, message: "请输入正确的邮箱号", trigger: "blur" },
+      ],
+      tel: [
+        { required: true, message: "请输入手机", trigger: "blur" },
+        { min: 11, max: 11, message: "请输入正确的手机号", trigger: "blur" },
+      ],
+    };
+    let getUserList = async function () {
+      const { data: res } = await axios.post("/usersList", {
+        params: queryInfo,
+      });
+      if (res.meta.status != 200) {
+        return ElMessage.error("获取用户列表失败！");
+      }
+      res.data.map((item) => {
+        item.mg_state = Boolean(item.mg_state);
+      });
+      state.userList = res.data;
+      state.total = res.total.total;
+    };
+    getUserList();
     // 监听 pagesize 改变的事件
     let handleSizeChange = (newSize) => {
-      console.log(newSize);
       queryInfo.pagesize = newSize;
       getUserList();
     };
     // 监听 页码值 改变的事件
     let handleCurrentChange = (newPage) => {
-      console.log(newPage);
       queryInfo.pagenum = newPage;
       getUserList();
     };
     // 监听 switch 开关状态改变
-    let userStateChange =async (userInfo) => {
+    let userStateChange = async (userInfo) => {
       console.log(userInfo);
-      let {data: res} = await axios.put("");
+      let { data: res } = await axios.put("");
     };
     // 添加用户按钮
     let addUser = () => {
-      state.addDialogVisible = true
-    }
+      state.addDialogVisible = true;
+    };
     // 确认添加用户按钮
     let addUserOk = async () => {
-      addFormRef.value.validate()
-       let {data: res} = await axios.post("/addUser", {params: addForm})
-       console.log(addForm)
-       console.log(res)
-       if(res.meta.status != 200){
-         return ElMessage.error('添加用户失败！')
-       }
-         state.addDialogVisible = false
-         getUserList();
-         return ElMessage.success('添加用户成功！')
-    }
+      addFormRef.value.validate();
+      let { data: res } = await axios.post("/addUser", { params: addForm });
+      if (res.meta.status != 200) {
+        return ElMessage.error("添加用户失败！");
+      }
+      state.addDialogVisible = false;
+      getUserList();
+      return ElMessage.success("添加用户成功！");
+    };
     // 监听添加用户对话框的关闭事件
     let addDialogClosed = () => {
-        addFormRef.value.resetFields(valid => {
-           if(!valid) return
-           //可以发起添加用户的网络请求
-           
-        })
-    }
+      addFormRef.value.resetFields((valid) => {
+        if (!valid) return;
+        //可以发起添加用户的网络请求
+      });
+    };
     // 展示编辑用户的对话框
-    let showEditDialog = (id) => {
-          state.editDialogVisible = true
-          console.log(id)
-    }
+    let showEditDialog = async (id) => {
+      state.editDialogVisible = true;
+      let { data: res } = await axios.post("/selectUser", id);
+      if (res.meta.status != 200) {
+        return ElMessage.error("删除用户失败！");
+      }
+      updateForm.username = res.data[0].name;
+      updateForm.email = res.data[0].email;
+      updateForm.tel = res.data[0].tel;
+    };
     //删除用户按钮
-    let deleteUser = async info => {
-       let {data: res} = await axios.post("/deleteUser", info)
-        if(res.meta.status != 200){
-         return ElMessage.error('删除用户失败！')
-       }
-        getUserList();
-       return ElMessage.success('删除用户成功！')
-    }
+    let deleteUser = (info) => {
+       ElMessageBox.confirm('确定删除该用户?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+           let { data: res } = await axios.post("/deleteUser", info);
+      if (res.meta.status != 200) {
+        return ElMessage.error("删除用户失败！");
+      }
+      getUserList();
+      return ElMessage.success("删除用户成功！");
+        }).catch(err => err)
+     
+    };
+    //监听修改用户对话框的关闭事件
+    let updateDialogClosed = () => {
+      updateFormRef.value.resetFields();
+    };
+    //修改用户信息并提交
+    let updateUser = () => {
+      updateFormRef.value.validate(async (valid) => {
+        if (!valid) return;
+        //发起修改用户信息的请求
+        let { data: res } = await axios.post("/updateUser", {
+          params: updateForm,
+        });
+        if (res.meta.status != 200) {
+          return ElMessage.error("修改用户信息失败！");
+        }
+        getUserList()
+        return ElMessage.success("修改用户成功！");
+      });
+      state.editDialogVisible = false;
+    };
     return {
       queryInfo,
       getUserList,
@@ -259,7 +353,12 @@ export default defineComponent({
       addDialogClosed,
       addFormRef,
       showEditDialog,
-      deleteUser
+      deleteUser,
+      updateFormRef,
+      updateForm,
+      updateFormRules,
+      updateDialogClosed,
+      updateUser,
     };
   },
 });

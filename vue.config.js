@@ -12,26 +12,35 @@ module.exports = {
                 // }
             },
             // 左侧菜单接口
-            '/menus': {         
+            '/menus': {
                 target: 'http://127.0.0.1:3000', 
-                changeOrigin: true,              
+                changeOrigin: true,     
             },
             //获取用户列表接口
-            '/usersList': {         
+            '/usersList': {
                 target: 'http://127.0.0.1:3000', 
-                changeOrigin: true,              
+                changeOrigin: true,     
             },
             //添加用户接口
-            '/addUser': {         
+            '/addUser': {
                 target: 'http://127.0.0.1:3000', 
-                changeOrigin: true,              
+                changeOrigin: true,
             },
             //删除用户接口
-            '/deleteUser': {         
+            '/deleteUser': {
                 target: 'http://127.0.0.1:3000', 
-                changeOrigin: true,              
+                changeOrigin: true,       
             },
-           
+            //修改用户信息接口
+            '/updateUser': {
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,   
+            },
+            //查询用户信息接口
+            '/selectUser': {
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,        
+            },
         }
     },
     // css: {
