@@ -6,6 +6,8 @@ import Users from '../components/user/Users.vue'
 import DataModidy from '../components/dataStatistics/dataModify.vue'
 import writePromise from '../components/promisePractice/writePromise.vue'
 import pageTest from '../components/dataStatistics/pageTest.vue'
+import limitsList from '../components/limitsManage/limitsList.vue'
+import roleList from '../components/limitsManage/roleList.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -33,7 +35,9 @@ const routes: Array<RouteRecordRaw> = [
                {path: '/users', component: Users},
                {path: '/dataModidy', component: DataModidy},
                {path: '/writePromise', component: writePromise},
-               {path: '/pageTest', component: pageTest}]
+               {path: '/pageTest', component: pageTest},
+               {path: '/rights', component: limitsList},
+               {path: '/roles', component: roleList},]
 
   },
   // {

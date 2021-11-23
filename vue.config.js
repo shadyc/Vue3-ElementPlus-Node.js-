@@ -41,6 +41,16 @@ module.exports = {
                 target: 'http://127.0.0.1:3000', 
                 changeOrigin: true,        
             },
+             //查询权限列表接口
+             '/limits': {
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,        
+            },
+             //查询角色列表接口
+             '/roles': {
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,        
+            },
         }
     },
     // css: {
