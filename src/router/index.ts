@@ -3,7 +3,7 @@ import login from '../views/login.vue'
 import Home from '../views/Home.vue'
 import welcome from '../components/welcome.vue'
 import Users from '../components/user/Users.vue'
-import DataModidy from '../components/dataStatistics/dataModify.vue'
+import DataModify from '../components/dataStatistics/dataModify.vue'
 import writePromise from '../components/promisePractice/writePromise.vue'
 import pageTest from '../components/dataStatistics/pageTest.vue'
 import limitsList from '../components/limitsManage/limitsList.vue'
@@ -33,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/welcome', 
     children: [{path: '/welcome', component: welcome},
                {path: '/users', component: Users},
-               {path: '/dataModidy', component: DataModidy},
+               {path: '/dataModify', component: DataModify},
                {path: '/writePromise', component: writePromise},
                {path: '/pageTest', component: pageTest},
                {path: '/rights', component: limitsList},

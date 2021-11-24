@@ -8,7 +8,7 @@
   <el-card>
       <el-row>
           <el-col>
-              <el-button type="primary">添加角色</el-button>
+              <el-button type="primary" @click="test">添加角色</el-button>
           </el-col>
       </el-row>
 
@@ -96,13 +96,19 @@ export default {
        let editRole = () => {
 
        }
+       let test = async () => {
+            console.log("123")
+            let {data: res} = await axios.get("/test1")
+            console.log(res)
+       }
        return{
           state,
           editFormRef,
           editForm,
           editDialogClosed,
           showEditDialog,
-          editRole
+          editRole,
+          test
        }
    }
 }

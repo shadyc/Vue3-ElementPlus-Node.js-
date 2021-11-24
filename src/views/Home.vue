@@ -88,9 +88,9 @@ export default defineComponent({
     });
     //获取所有菜单
     (async () => {
-      let res = await axios.get("/menus");
-      state.menuList = res.data.data;
-      console.log(state.menuList);
+      let {data: res} = await axios.get("/menus");
+      console.log(res)
+      state.menuList = res.data;
     })();
     const setOut = function () {
       token.clear();
