@@ -14,6 +14,7 @@
                <template #default="scope">
                    <el-tag v-if="scope.row.level === '0'">一级权限</el-tag>
                    <el-tag v-else-if="scope.row.level === '1'" type="success">二级权限</el-tag>
+                   <el-tag v-else="scope.row.level === '2'" type="warning">三级权限</el-tag>
                </template>
            </el-table-column>
        </el-table>

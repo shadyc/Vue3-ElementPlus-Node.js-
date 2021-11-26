@@ -51,10 +51,14 @@ module.exports = {
                 target: 'http://127.0.0.1:3000', 
                 changeOrigin: true,        
             },
-            // '/test1': {
-            //     target: 'http://127.0.0.1:3000', 
-            //     changeOrigin: true,        
-            // },
+            '/editRole': {
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,        
+            },
+            '/editRoleSubmit': {
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,        
+            },
         }
     },
     // css: {
