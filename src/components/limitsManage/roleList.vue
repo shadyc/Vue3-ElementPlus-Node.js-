@@ -12,12 +12,32 @@
       </el-col>
     </el-row>
 
+
     <!-- 角色列表区域 -->
     <el-table :data="state.roleList" border stripe>
       <!-- 展开列 -->
       <el-table-column type="expand">
         <template #default="scope">
-          {{ scope.row }}
+          <el-row :class="['bdbottom', index1 === 0? 'bdtop' : '']" v-for="(item1,index1) in scope.row.children" :key="item1.id">
+            <!-- 渲染一级权限 -->
+            <el-col :span="5">
+              <el-tag>{{item1.authName}}</el-tag>
+              <i class="el-icon-caret-right"></i>
+            </el-col>
+            <!-- 渲染二级和三级权限 -->
+            <el-col :span="18">
+              <!-- 通过for循环嵌套渲染二级权限 -->
+              <el-row :class="[index2 === 0 ? '' : 'bdtop']" v-for="(item2,index2) in item1.children" :key="item2.id">
+                <el-col :span="6" style="margin-top: 0px;">
+                  <el-tag  type="success">{{item2.authName}}</el-tag>
+                   <i class="el-icon-caret-right"></i>
+                </el-col>
+                <el-col :span="18">
+                  <el-tag v-for="(item3,index3) in item2.children" :key="item3.id">{{item3.authName}}</el-tag>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
         </template>
       </el-table-column>
       <!-- 索引列 -->
@@ -69,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref } from "@vue/reactivity";
+import { isProxy, reactive, ref } from "@vue/reactivity";
 import axios from "axios";
 import { ElMessage } from "element-plus";
 export default {
@@ -86,6 +106,7 @@ export default {
       roleName: "",
       roleDesc: "",
     });
+    //请求角色信息
     let selectRole = async () => {
       let { data: res } = await axios.get("/roles");
       if (res.meta.status != 200) {
@@ -118,8 +139,8 @@ export default {
       if (res.meta.status != 200) {
         return ElMessage.error("修改角色信息失败！");
       }
-      selectRole();
       state.editDialogVisible = false;
+      selectRole();
       return ElMessage.success("修改角色信息成功！");
     };
     // 添加角色按钮
@@ -140,5 +161,17 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less" scoped>
+//给el-col添加margin
+.el-col{
+  margin: 7px;
+}
+
+.bdtop{
+  border-top: 1px solid #eee;
+}
+
+.bdbottom{
+  border-bottom: 1px solid #eee;
+}
 </style>
