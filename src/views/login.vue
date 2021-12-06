@@ -155,8 +155,8 @@ export default defineComponent({
 }
 
 .btnGroup{
-  position: absolute;
-  left: 52.5%;
+  position: relative;
+  left: 30%;
   margin-top: 20px;
 }
  .el-input {
