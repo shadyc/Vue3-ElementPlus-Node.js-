@@ -71,6 +71,7 @@
               type="warning"
               icon="el-icon-setting"
               size="mini"
+              @click="setRole(scope.row)"
             ></el-button>
           </el-tooltip>
         </template>
@@ -123,6 +124,30 @@
       </span>
     </template>
   </el-dialog>
+
+    <!-- 分配角色的对话框 -->
+  <el-dialog
+  title="分配角色"
+  v-model="state.setRoleDialogVisible"
+  width="50%"
+  >
+  <div>
+    <p>当前用户：{{state.userInfo.name}}</p>
+    <p>当前角色：{{state.userInfo.role}}</p>
+    <p>分配新角色：
+      <el-select v-model="state.selectedRoleId" placeholder="请选择">
+        <el-option v-for="item in state.rolesList" :key="item.roleId" :label="item.roleName" :value="item.roleId">
+        </el-option>
+      </el-select>
+    </p>
+  </div>
+  <template #footer>
+  <span class="dialog-footer">
+    <el-button @click="state.setRroleDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+  </span>
+  </template>
+</el-dialog>
 
   <!-- 修改用户的对话框 -->
   <el-dialog
@@ -183,6 +208,14 @@ export default defineComponent({
       // 控制添加用户对话框的显隐
       addDialogVisible: false,
       editDialogVisible: false,
+      // 控制分配角色对话框的显隐
+      setRoleDialogVisible: false,
+      //需要被分配角色的用户信息
+      userInfo: {},
+      //所有角色的数据列表
+      rolesList: [],
+      //已选中的角色id值
+      selectedRoleId: '',
     });
     const addFormRef: any = ref(null);
     // 添加用户的表单数据
@@ -339,6 +372,23 @@ export default defineComponent({
       });
       state.editDialogVisible = false;
     };
+    //展示分配角色对话框
+    let setRole = async(userInfo) => {
+        state.userInfo = userInfo
+        //在展示对话框之前获取所有角色列表
+        let {data: res} = await axios.get("/roles")
+        if(res.meta.status !== 200){
+          return ElMessage.error("获取角色列表失败！")
+        }
+        state.rolesList = res.data
+        state.setRoleDialogVisible = true
+    };
+    //点击按钮分配角色
+    let saveRoleInfo = () => {
+      if(!state.selectedRoleId){
+        return ElMessage.error("请选择要分配的角色!")
+      }
+    }
     return {
       queryInfo,
       getUserList,
@@ -359,6 +409,8 @@ export default defineComponent({
       updateFormRules,
       updateDialogClosed,
       updateUser,
+      setRole,
+      saveRoleInfo
     };
   },
 });

@@ -68,9 +68,10 @@
   <el-dialog
   title="分配权限"
   v-model="state.setRightDialogVisible"
-  width="50%">
+  width="50%"
+  @close="setRightDialogClosed">
   <!-- 树形控件 -->
-  <el-tree :data="state.rightsList" :props="state.treeProps" show-checkbox node-key="id" default-expand-all default-checked-keys="state.defkeys"/>
+  <el-tree :data="state.rightsList" :props="state.treeProps" show-checkbox node-key="id" default-expand-all :default-checked-keys="state.defkeys"/>
   <template #footer>
   <span class="dialog-footer">
     <el-button @click="state.setRightDialogVisible = false">取 消</el-button>
@@ -197,7 +198,7 @@ export default {
       if(res.meta.status !== 200){
         return ElMessage.error('获取权限数据失败')
       }
-      // 获取到的权限数据保存到list里
+      // // 获取到的权限数据保存到list里
       state.rightsList = res.data
 
       // 递归获取三级节点的ID
@@ -212,8 +213,11 @@ export default {
       }
       node.children.forEach(item => 
           getLeafKeys(item, arr))
+    };
+    //监听分配权限对话框的关闭事件
+    let setRightDialogClosed = () => {
+      state.defkeys = []
     }
-    
     return {
       state,
       editFormRef,
@@ -225,7 +229,8 @@ export default {
       addRole,
       removeRightById,
       showSetRightDialog,
-      getLeafKeys
+      getLeafKeys,
+      setRightDialogClosed
     };
   },
 };
