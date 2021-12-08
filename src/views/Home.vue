@@ -68,7 +68,7 @@ import { reactive, ref, unref } from "vue";
 import axios from "axios";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
-const token = window.sessionStorage;
+const token = window.localStorage;
 
 export default defineComponent({
   name: "Home",
