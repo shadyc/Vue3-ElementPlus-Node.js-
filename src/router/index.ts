@@ -8,6 +8,7 @@ import writePromise from '../components/promisePractice/writePromise.vue'
 import pageTest from '../components/dataStatistics/pageTest.vue'
 import limitsList from '../components/limitsManage/limitsList.vue'
 import roleList from '../components/limitsManage/roleList.vue'
+import Cate from '../components/goods/Cate.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -37,7 +38,8 @@ const routes: Array<RouteRecordRaw> = [
                {path: '/writePromise', component: writePromise},
                {path: '/pageTest', component: pageTest},
                {path: '/rights', component: limitsList},
-               {path: '/roles', component: roleList},]
+               {path: '/roles', component: roleList},
+               {path: '/part', component: Cate},]
 
   },
   // {

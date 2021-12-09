@@ -59,6 +59,11 @@ module.exports = {
                 target: 'http://127.0.0.1:3000', 
                 changeOrigin: true,        
             },
+            //查询商品列表接口
+            '/categories': {
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,        
+            },
         }
     },
     // css: {
