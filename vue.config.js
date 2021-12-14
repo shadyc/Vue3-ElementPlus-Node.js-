@@ -64,6 +64,11 @@ module.exports = {
                 target: 'http://127.0.0.1:3000', 
                 changeOrigin: true,        
             },
+            //添加商品分类接口
+            '/addcategories': {
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,        
+            },
         }
     },
     // css: {
