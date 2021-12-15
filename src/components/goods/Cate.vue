@@ -248,10 +248,11 @@ export default defineComponent({
       addCateFormRef.value.validate(async valid => {
         if(!valid) return
         const {data: res} = await axios.post("addcategories", addCateForm)
-        if(res.meda.status != 200){
-          return ElMessage.error("添加分类失败")
+        console.log(res)
+        if(res.meta.status != 200){
+          return ElMessage.error("添加分类失败!")
         }
-        ElMessage.success("添加分类成功！")
+        ElMessage.success("添加分类成功!")
         getCateList()
         state.addCateVisible = false
       })
