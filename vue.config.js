@@ -69,6 +69,11 @@ module.exports = {
                 target: 'http://127.0.0.1:3000', 
                 changeOrigin: true,        
             },
+            //查询分类参数接口
+            '/attributes': {
+                target: 'http://127.0.0.1:3000', 
+                changeOrigin: true,        
+            },
         }
     },
     // css: {

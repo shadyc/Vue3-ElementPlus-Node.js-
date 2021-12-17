@@ -9,6 +9,7 @@ import pageTest from '../components/dataStatistics/pageTest.vue'
 import limitsList from '../components/limitsManage/limitsList.vue'
 import roleList from '../components/limitsManage/roleList.vue'
 import Cate from '../components/goods/Cate.vue'
+import Data from '../components/goods/Data.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -39,7 +40,8 @@ const routes: Array<RouteRecordRaw> = [
                {path: '/pageTest', component: pageTest},
                {path: '/rights', component: limitsList},
                {path: '/roles', component: roleList},
-               {path: '/part', component: Cate},]
+               {path: '/part', component: Cate},
+               {path: '/data', component: Data},]
 
   },
   // {

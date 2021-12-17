@@ -191,13 +191,14 @@ export default defineComponent({
         params: queryInfo,
       });
       if (res.meta.status !== 200) {
-        return ElMessage.error("获取商品分类失败！");
+        return ElMessage.error("获取商品分类失败!");
       }
       console.log(res);
       //把商品分类数据列表赋值给catelist
       state.catelist = res.data;
       //为总条数赋值
       state.total = res.total.pageTotal;
+      console.log(res)
     };
     getCateList();
     // 监听 pagesize 改变的事件
@@ -222,7 +223,7 @@ export default defineComponent({
         params: { type: 2 },
       });
       if (res.meta.status != 200) {
-        return ElMessage.error("获取父级分类数据失败！");
+        return ElMessage.error("获取父级分类数据失败!");
       }
       state1.parentCateList = res.data;
     };
@@ -247,7 +248,7 @@ export default defineComponent({
       console.log(addCateForm);
       addCateFormRef.value.validate(async valid => {
         if(!valid) return
-        const {data: res} = await axios.post("addcategories", addCateForm)
+        const {data: res} = await axios.post("/addcategories", addCateForm)
         console.log(res)
         if(res.meta.status != 200){
           return ElMessage.error("添加分类失败!")
@@ -309,10 +310,10 @@ export default defineComponent({
     background-size: 16px;
   }
 }
-.el-table /deep/ .el-table__expand-icon--expanded {
+.el-table:deep(.el-table__expand-icon--expanded) {
   transform: none;
 }
-/deep/.el-cascader {
+:deep(.el-cascader) {
   width: 100%;
 }
 </style>

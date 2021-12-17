@@ -168,7 +168,7 @@ export default defineComponent({
      opacity: 0.7;
   }
 
-  /deep/.el-input--prefix .el-input__inner{
+  :deep(.el-input--prefix .el-input__inner){
     background-color: rgb(89, 107, 143);
     border: none;
     color: #FFFFFF;
