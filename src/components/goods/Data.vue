@@ -35,11 +35,39 @@
       <el-tab-pane label="User" name="many">
         <!-- 添加参数按钮 -->
         <el-button type="primary" size="mini" :disabled="btnComputed">添加参数</el-button>
+        <!-- 动态参数表格 -->
+        <el-table :data="manyTableData" border stripe>
+          <!-- 展开行 -->
+           <el-table-column type="expand"></el-table-column>
+           <!-- 索引列 -->
+           <el-table-column type="index"></el-table-column>
+           <el-table-column label="参数名称" prop="attr_name"></el-table-column>
+           <el-table-column label="操作">
+             <template #default="scope">
+               <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
+               <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
+             </template>
+           </el-table-column>
+        </el-table>
       </el-tab-pane>
       <!-- 添加静态属性面板 -->
       <el-tab-pane label="Config" name="only">
         <!-- 添加属性按钮 -->
         <el-button type="primary" size="mini" :disabled="btnComputed">添加属性</el-button>
+          <!-- 静态属性表格 -->
+        <el-table :data="onlyTableData" border stripe>
+          <!-- 展开行 -->
+           <el-table-column type="expand"></el-table-column>
+           <!-- 索引列 -->
+           <el-table-column type="index"></el-table-column>
+           <el-table-column label="属性名称" prop="attr_name"></el-table-column>
+           <el-table-column label="操作">
+             <template #default="scope">
+               <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
+               <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
+             </template>
+           </el-table-column>
+        </el-table>
       </el-tab-pane>
     </el-tabs>
   </el-card>
@@ -65,7 +93,10 @@ export default defineComponent({
       selectedCateKeys: [],
       // 被激活的页签的名称
       activeName: 'many',
-      
+      //动态参数的数据
+      manyTableData: [],
+      //静态属性的数据
+      onlyTableData: [],
     });
     // 获取所有商品分类列表
     let getCateList = async () => {
@@ -80,7 +111,11 @@ export default defineComponent({
     getCateList();
     // 级联选择框选中项时触发此函数
     let handleChange = async() => {
-      let catId = state.selectedCateKeys[2];
+       getParamsData()
+    };
+    // 获取参数的列表数据
+    let getParamsData = async () => {
+        let catId = state.selectedCateKeys[2];
       // 根据所选分类id和当前所处面板获取对应的参数
     let {data: res} = await axios.post("/attributes", {
         params: {cat_id: catId, attr_sel: state.activeName}
@@ -89,10 +124,15 @@ export default defineComponent({
         return ElMessage.error("获取分类参数失败!");
       }
       console.log(res)
-      console.log("哈哈哈")
-    };
+      if(state.activeName === 'many'){
+        state.manyTableData = res.data
+      }else{
+        state.onlyTableData = res.data
+      }
+    }
     // tab 页签点击事件的处理函数
     let handleTabClick = () => {
+         getParamsData()
          console.log(state.activeName)
     };
     // 计算属性，通过监听级联选择框数组长度来禁用按钮，若需要禁用按钮，返回true，否则返回false
