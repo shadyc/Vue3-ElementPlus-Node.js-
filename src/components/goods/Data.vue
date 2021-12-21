@@ -34,43 +34,80 @@
       <!-- 添加动态参数面板 -->
       <el-tab-pane label="User" name="many">
         <!-- 添加参数按钮 -->
-        <el-button type="primary" size="mini" :disabled="btnComputed">添加参数</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          :disabled="btnComputed"
+          @click="showDialog"
+          >添加参数</el-button
+        >
         <!-- 动态参数表格 -->
         <el-table :data="manyTableData" border stripe>
           <!-- 展开行 -->
-           <el-table-column type="expand"></el-table-column>
-           <!-- 索引列 -->
-           <el-table-column type="index"></el-table-column>
-           <el-table-column label="参数名称" prop="attr_name"></el-table-column>
-           <el-table-column label="操作">
-             <template #default="scope">
-               <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
-               <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
-             </template>
-           </el-table-column>
+          <el-table-column type="expand"></el-table-column>
+          <!-- 索引列 -->
+          <el-table-column type="index"></el-table-column>
+          <el-table-column label="参数名称" prop="attr_name"></el-table-column>
+          <el-table-column label="操作">
+            <template #default="scope">
+              <el-button size="mini" type="primary" icon="el-icon-edit"
+                >编辑</el-button
+              >
+              <el-button size="mini" type="danger" icon="el-icon-delete"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
         </el-table>
       </el-tab-pane>
       <!-- 添加静态属性面板 -->
       <el-tab-pane label="Config" name="only">
         <!-- 添加属性按钮 -->
-        <el-button type="primary" size="mini" :disabled="btnComputed">添加属性</el-button>
-          <!-- 静态属性表格 -->
+        <el-button
+          type="primary"
+          size="mini"
+          :disabled="btnComputed"
+          @click="showDialog"
+          >添加属性</el-button
+        >
+        <!-- 静态属性表格 -->
         <el-table :data="onlyTableData" border stripe>
           <!-- 展开行 -->
-           <el-table-column type="expand"></el-table-column>
-           <!-- 索引列 -->
-           <el-table-column type="index"></el-table-column>
-           <el-table-column label="属性名称" prop="attr_name"></el-table-column>
-           <el-table-column label="操作">
-             <template #default="scope">
-               <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
-               <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
-             </template>
-           </el-table-column>
+          <el-table-column type="expand"></el-table-column>
+          <!-- 索引列 -->
+          <el-table-column type="index"></el-table-column>
+          <el-table-column label="属性名称" prop="attr_name"></el-table-column>
+          <el-table-column label="操作">
+            <template #default="scope">
+              <el-button size="mini" type="primary" icon="el-icon-edit"
+                >编辑</el-button
+              >
+              <el-button size="mini" type="danger" icon="el-icon-delete"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
   </el-card>
+
+  <!-- 添加参数的对话框 -->
+  <el-dialog :title="'添加' + titleText" v-model="addDialogVisible" width="50%" @close="addDialogClosed">
+    <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
+      <el-form-item :label="titleText" prop="attr_name">
+        <el-input v-model="addForm.attr_name"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts">
@@ -92,12 +129,23 @@ export default defineComponent({
       },
       selectedCateKeys: [],
       // 被激活的页签的名称
-      activeName: 'many',
+      activeName: "many",
       //动态参数的数据
       manyTableData: [],
       //静态属性的数据
       onlyTableData: [],
+      // 控制添加对话框的显隐
+      addDialogVisible: false,
+      // 添加参数的表单数据对象
+      addForm: {
+        attr_name: ''
+      },
+      // 添加表单的验证规则对象
+      addFormRules: {
+        attr_name: [{required: true, message: "请输入参数名称", trigger: "blur"}]
+      },
     });
+     const addFormRef:any = ref(null);
     // 获取所有商品分类列表
     let getCateList = async () => {
       let { data: res } = await axios.post("/categories", {
@@ -110,46 +158,63 @@ export default defineComponent({
     };
     getCateList();
     // 级联选择框选中项时触发此函数
-    let handleChange = async() => {
-       getParamsData()
+    let handleChange = async () => {
+      getParamsData();
     };
     // 获取参数的列表数据
     let getParamsData = async () => {
-        let catId = state.selectedCateKeys[2];
+      let catId = state.selectedCateKeys[2];
       // 根据所选分类id和当前所处面板获取对应的参数
-    let {data: res} = await axios.post("/attributes", {
-        params: {cat_id: catId, attr_sel: state.activeName}
-      })
+      let { data: res } = await axios.post("/attributes", {
+        params: { cat_id: catId, attr_sel: state.activeName },
+      });
       if (res.meta.status != 200) {
         return ElMessage.error("获取分类参数失败!");
       }
-      console.log(res)
-      if(state.activeName === 'many'){
-        state.manyTableData = res.data
-      }else{
-        state.onlyTableData = res.data
+      console.log(res);
+      if (state.activeName === "many") {
+        state.manyTableData = res.data;
+      } else {
+        state.onlyTableData = res.data;
       }
-    }
+    };
     // tab 页签点击事件的处理函数
     let handleTabClick = () => {
-         getParamsData()
-         console.log(state.activeName)
+      getParamsData();
+      console.log(state.activeName);
     };
     // 计算属性，通过监听级联选择框数组长度来禁用按钮，若需要禁用按钮，返回true，否则返回false
-    const btnComputed = computed(()=>{
-        let len = state.selectedCateKeys?.length
-        if(len !== 3){
-            return true
-        }
-        return false
-    })
- 
+    const btnComputed = computed(() => {
+      let len = state.selectedCateKeys?.length;
+      if (len !== 3) {
+        return true;
+      }
+      return false;
+    });
+    // 动态计算标题文本
+    const titleText = computed(() => {
+      if (state.activeName === "many") {
+        return "动态参数";
+      }
+      return "静态属性";
+    });
+    const showDialog = () => {
+      state.addDialogVisible = true;
+    };
+    // 监听对话框的关闭事件
+    let addDialogClosed = () => {
+          addFormRef.value.resetFields()
+    }
     return {
       ...toRefs(state),
       getCateList,
       handleChange,
       handleTabClick,
       btnComputed,
+      titleText,
+      showDialog,
+      addDialogClosed,
+      addFormRef
     };
   },
 });

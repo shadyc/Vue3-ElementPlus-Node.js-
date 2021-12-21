@@ -267,6 +267,7 @@ export default defineComponent({
     };
     return {
       state,
+      ...toRefs(state1),
       getCateList,
       queryInfo,
       columns,
@@ -277,7 +278,6 @@ export default defineComponent({
       addCateFormRules,
       addCateFormRef,
       parentCateChange,
-      ...toRefs(state1),
       addCate,
       addCateDialogClosed,
     };
