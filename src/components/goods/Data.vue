@@ -214,7 +214,7 @@ export default defineComponent({
       titleText,
       showDialog,
       addDialogClosed,
-      addFormRef
+      addFormRef,
     };
   },
 });
