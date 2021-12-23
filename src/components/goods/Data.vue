@@ -102,7 +102,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addDialogVisible = false"
+        <el-button type="primary" @click="addParams"
           >确 定</el-button
         >
       </span>
@@ -204,6 +204,15 @@ export default defineComponent({
     // 监听对话框的关闭事件
     let addDialogClosed = () => {
           addFormRef.value.resetFields()
+    }
+    //点击按钮添加参数
+    let addParams = () => {
+      addFormRef.value.validate(valid => {
+        if(!valid){
+          return
+        }
+        
+      })
     }
     return {
       ...toRefs(state),
